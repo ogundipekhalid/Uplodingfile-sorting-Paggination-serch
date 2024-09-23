@@ -1,0 +1,76 @@
+﻿@model SercPag_sorting.Models.PagUSerViewModel
+
+@{
+    ViewBag.Title = "All Users";
+}
+
+<h2>All Users</h2>
+
+<!-- Create Button -->
+<div class="d-flex justify-content-between mb-3">
+    <a href="@Url.Action("Create", "User")" class="btn btn-primary">Create New User</a>
+
+    <!-- Search Form -->
+    <form asp-action="AllUsers" asp-controller="User" method="get" class="form-inline">
+        <div class="input-group">
+            <input type="text" name="term" class="form-control" placeholder="Search by name" value="@Model.SearchTerm" />
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-info">Search</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Sorting Links -->
+<div class="mb-3">
+    <a href="@Url.Action("AllUsers", new { sortOrder = Model.SortOrder == "name_asc" ? "name_desc" : "name_asc", term = Model.SearchTerm })">Sort by Name</a> |
+    <a href="@Url.Action("AllUsers", new { sortOrder = Model.SortOrder == "email_asc" ? "email_desc" : "email_asc", term = Model.SearchTerm })">Sort by Email</a>
+</div>
+
+<!-- Users Table -->
+@if (Model.user != null && Model.user.Any())
+{
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.user)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.Name</td>
+                    <td>@user.Email</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-warning" role="alert">
+        No users found.
+    </div>
+}
+
+<!-- Pagination -->
+<nav aria-label="User Pagination">
+    <ul class="pagination">
+        <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+            <a class="page-link" href="@Url.Action("AllUsers", new { page = Model.CurrentPage - 1, sortOrder = Model.SortOrder, term = Model.SearchTerm })">Previous</a>
+        </li>
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                <a class="page-link" href="@Url.Action("AllUsers", new { page = i, sortOrder = Model.SortOrder, term = Model.SearchTerm })">@i</a>
+            </li>
+        }
+        <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+            <a class="page-link" href="@Url.Action("AllUsers", new { page = Model.CurrentPage + 1, sortOrder = Model.SortOrder, term = Model.SearchTerm })">Next</a>
+        </li>
+    </ul>
+</nav>

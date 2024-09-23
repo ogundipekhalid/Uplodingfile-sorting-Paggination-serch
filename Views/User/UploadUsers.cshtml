@@ -1,0 +1,26 @@
+﻿@model SercPag_sorting.Models.User
+
+@{
+    ViewBag.Title = "Upload Users and Document";
+}
+
+<h2>Upload Users and Document</h2>
+
+<form asp-action="UploadUsers" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="userFile">Upload User File (CSV or Excel)</label>
+        <input type="file" class="form-control" name="userFile" accept=".csv,.xlsx" />
+    </div>
+
+    <div class="form-group">
+        <label for="documentFile">Upload Document (PDF/Word)</label>
+        <input type="file" class="form-control" name="documentFile" accept=".pdf,.doc,.docx" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Upload</button>
+</form>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-info">@ViewBag.Message</div>
+}
